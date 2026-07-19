@@ -1,0 +1,14 @@
+{
+  "name": "mindgrapes-extension",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Chrome MV3 extension that bookmarks pages into Mind Grapes.",
+  "scripts": {
+    "test:pkce": "node tests/pkce.test.mjs",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0"
+  }
+}
