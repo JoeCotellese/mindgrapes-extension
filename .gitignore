@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+
+# Secrets / local config
+.env
+.env.*
+
+# Test artifacts
+test-results/
+playwright-report/
+tests/e2e/.chrome-profile/
+*.log
