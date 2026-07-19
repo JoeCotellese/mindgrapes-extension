@@ -80,6 +80,10 @@ test("bookmarks the SPEC article and shows a summary", async () => {
     const summary = (await popup.locator("#summary").textContent())?.trim();
     expect(summary && summary.length > 0).toBeTruthy();
 
+    // #38: once saved, Save must not still be offered — leaving it on screen
+    // reads as "that didn't take, press again" and stores a duplicate.
+    await expect(saveButton).toBeHidden();
+
     // The "View in brain" deep link should point at the stored experience.
     await expect(popup.locator("#view")).toBeVisible();
     const href = await popup.locator("#view").getAttribute("href");

@@ -60,8 +60,11 @@ els.save.addEventListener("click", async () => {
   els.save.disabled = true;
   els.status.textContent = "Saving… (summarizing page)";
   const res = await send({ type: "save" });
-  els.save.disabled = false;
   if (res && res.ok) {
+    // Retire the button rather than re-enabling it: a still-live Save reads as
+    // "that didn't take" and a second press stores a duplicate. Reopening the
+    // popup runs render() again, so the ready state is one click away.
+    els.save.hidden = true;
     els.status.textContent = "Saved ✓";
     els.summary.textContent = res.summary || "(no summary returned)";
     if (res.viewUrl) {
@@ -69,6 +72,7 @@ els.save.addEventListener("click", async () => {
       els.view.hidden = false;
     }
   } else {
+    els.save.disabled = false;
     els.status.textContent = "";
     els.error.textContent = (res && res.error) || "Save failed.";
   }
