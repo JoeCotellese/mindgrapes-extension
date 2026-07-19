@@ -5,6 +5,8 @@
   "type": "module",
   "description": "Chrome MV3 extension that bookmarks pages into Mind Grapes.",
   "scripts": {
+    "package": "scripts/package.sh",
+    "test:package": "playwright test tests/e2e/package.spec.mjs",
     "test:pkce": "node tests/pkce.test.mjs",
     "test:e2e": "playwright test"
   },
