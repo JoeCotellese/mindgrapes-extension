@@ -1,0 +1,63 @@
+<!-- ABOUTME: Popup markup for the Mind Grapes action — the 3-state save UI. -->
+<!-- ABOUTME: not-authed (Connect), saving (progress), saved (summary + link). -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mind Grapes</title>
+    <style>
+      :root { color-scheme: light dark; }
+      body {
+        font: 14px/1.4 system-ui, sans-serif;
+        width: 300px;
+        margin: 0;
+        padding: 14px 16px;
+      }
+      h1 { font-size: 15px; margin: 0 0 10px; }
+      button {
+        font: inherit;
+        padding: 8px 14px;
+        border-radius: 8px;
+        border: 1px solid transparent;
+        background: #6b21a8;
+        color: #fff;
+        cursor: pointer;
+      }
+      button:disabled { opacity: 0.6; cursor: default; }
+      button.secondary { background: transparent; color: inherit; border-color: currentColor; }
+      #summary { margin: 8px 0; white-space: pre-wrap; }
+      #error { color: #b00020; margin: 8px 0; }
+      .row { margin-top: 10px; }
+      .muted { opacity: 0.7; font-size: 12px; }
+      a { color: #6b21a8; }
+    </style>
+  </head>
+  <body>
+    <h1>🍇 Mind Grapes</h1>
+
+    <!-- status is announced to assistive tech as it changes -->
+    <p id="status" aria-live="polite" role="status"></p>
+    <p id="summary"></p>
+    <p id="error" role="alert"></p>
+
+    <div class="row">
+      <button id="connect" aria-label="Connect to Mind Grapes" hidden>
+        Connect
+      </button>
+      <button id="save" aria-label="Save this page to Mind Grapes" hidden>
+        Save
+      </button>
+      <a id="view" class="row" href="#" target="_blank" rel="noopener" hidden>
+        View in brain →
+      </a>
+    </div>
+
+    <p id="hint" class="muted" hidden>
+      No token set. Open
+      <a href="#" id="options-link">Options</a> to add a dev token or connect.
+    </p>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

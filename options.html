@@ -1,0 +1,37 @@
+<!-- ABOUTME: Options page — set the Mind Grapes base URL and a dev bearer token. -->
+<!-- ABOUTME: The dev token lets the extension skip interactive OAuth for testing. -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Mind Grapes — Options</title>
+    <style>
+      :root { color-scheme: light dark; }
+      body { font: 14px/1.5 system-ui, sans-serif; max-width: 560px; margin: 32px auto; padding: 0 16px; }
+      label { display: block; font-weight: 600; margin: 16px 0 4px; }
+      input, textarea { width: 100%; font: inherit; padding: 8px; box-sizing: border-box; }
+      textarea { min-height: 90px; }
+      button { font: inherit; margin-top: 16px; padding: 8px 16px; border-radius: 8px; border: 0; background: #6b21a8; color: #fff; cursor: pointer; }
+      .muted { opacity: 0.7; font-size: 12px; }
+      #saved { color: #1a7f37; margin-left: 10px; }
+    </style>
+  </head>
+  <body>
+    <h1>🍇 Mind Grapes — Options</h1>
+
+    <label for="baseUrl">Base URL</label>
+    <input id="baseUrl" type="url" placeholder="http://localhost:8080" />
+    <p class="muted">The Mind Grapes server. Non-localhost hosts also need an entry in <code>host_permissions</code>.</p>
+
+    <label for="devToken">Dev bearer token (optional)</label>
+    <textarea id="devToken" placeholder="Paste a JWT from `manage.py mint_access_token`"></textarea>
+    <p class="muted">When set, the extension uses this token directly and skips the OAuth flow.</p>
+
+    <div>
+      <button id="save">Save</button>
+      <span id="saved" aria-live="polite"></span>
+    </div>
+
+    <script src="options.js"></script>
+  </body>
+</html>
