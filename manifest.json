@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Mind Grapes",
-  "version": "2026.7.1",
+  "version": "2026.7.2",
   "description": "Bookmark the current page into your Mind Grapes second brain.",
   "icons": {
     "16": "icons/icon16.png",
@@ -19,7 +19,9 @@
   },
   "background": {
     "service_worker": "background.js",
-    "scripts": ["background.js"],
+    "scripts": [
+      "background.js"
+    ],
     "type": "module"
   },
   "browser_specific_settings": {
