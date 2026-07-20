@@ -19,7 +19,14 @@
   },
   "background": {
     "service_worker": "background.js",
+    "scripts": ["background.js"],
     "type": "module"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "mindgrapes@cotellese.net",
+      "strict_min_version": "128.0"
+    }
   },
   "options_ui": {
     "page": "options.html",

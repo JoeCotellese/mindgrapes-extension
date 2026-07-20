@@ -28,6 +28,20 @@ tests/e2e/        Playwright end-to-end test (the SPEC stop condition)
 3. Click **Load unpacked** and select this repo directory.
 4. Pin the **Mind Grapes** action to the toolbar.
 
+## Load temporarily (Firefox)
+
+The same bundle runs in Firefox — the manifest declares both an MV3 service
+worker (Chrome) and a background script (Firefox), and each browser reads the
+key it supports.
+
+1. Open `about:debugging#/runtime/this-firefox`.
+2. Click **Load Temporary Add-on…** and select this repo's `manifest.json`.
+3. Use **Inspect** on the loaded add-on to see background script errors — the
+   automated Firefox check installs the bundle but cannot observe it running.
+
+A temporary add-on is removed when Firefox restarts. Installing permanently
+requires AMO signing.
+
 ## Configure
 
 Open the extension's **Options** page (right-click the action → Options, or from
@@ -68,7 +82,7 @@ For the fast build loop, set a dev token and skip Connect entirely.
 
 ## Run the checks
 
-Two runnable checks ship with the extension:
+Several runnable checks ship with the extension:
 
 ### 1. PKCE unit check (no browser, no server)
 
@@ -105,6 +119,21 @@ npx playwright test
   channel, which the test configures. If your environment can't launch a
   headed/`headless=new` Chromium with `--load-extension`, the test cannot run;
   see the top-of-file notes in `tests/e2e/capture.spec.mjs`.
+
+### 3. Packaging checks (no server)
+
+```bash
+npm run test:package   # the packed zip loads as an extension in Chromium
+npm run test:firefox   # the packed zip installs as a temporary add-on in Firefox
+npm run test:version   # calendar version bump rolls over by month and year
+```
+
+`npm run test:firefox` needs `npx playwright install firefox`. It covers less
+than the Chromium check: removing `background.scripts` from the manifest makes
+the install fail, but replacing `background.js` with invalid JavaScript does
+not, because Playwright cannot reach a Firefox background page or a
+`moz-extension://` URL. Firefox runtime behaviour still needs the manual
+**Inspect** pass described above.
 
 ## Done vs. deferred
 

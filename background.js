@@ -3,15 +3,20 @@
 
 import { randomVerifier, s256Challenge } from "./pkce.js";
 
+// Firefox exposes promise-based APIs on `browser` and callback-based ones
+// on `chrome`; Chrome MV3 has only `chrome`, which is promise-based. Every
+// call below is awaited, so the promise-bearing namespace has to win.
+const api = globalThis.browser ?? globalThis.chrome;
+
 const DEFAULT_BASE_URL = "http://localhost:8080";
 const REQUESTED_SCOPE = "brain:read brain:write";
 
 // ---------------------------------------------------------------------------
-// Config + token storage (chrome.storage.local)
+// Config + token storage (api.storage.local)
 // ---------------------------------------------------------------------------
 
 async function getConfig() {
-  const s = await chrome.storage.local.get([
+  const s = await api.storage.local.get([
     "baseUrl",
     "devToken",
     "oauth", // { accessToken, refreshToken, clientId, expiresAt }
@@ -84,14 +89,14 @@ async function storeTokens(clientId, data) {
     clientId,
     expiresAt: data.expires_in ? Date.now() + data.expires_in * 1000 : null,
   };
-  await chrome.storage.local.set({ oauth });
+  await api.storage.local.set({ oauth });
   return oauth;
 }
 
 // Interactive Connect: runs the full PKCE authorization-code flow.
 async function connect() {
   const cfg = await getConfig();
-  const redirectUri = chrome.identity.getRedirectURL();
+  const redirectUri = api.identity.getRedirectURL();
   const meta = await discover(cfg.baseUrl);
   const clientId = await registerClient(meta, redirectUri);
 
@@ -108,7 +113,7 @@ async function connect() {
   authUrl.searchParams.set("code_challenge", challenge);
   authUrl.searchParams.set("code_challenge_method", "S256");
 
-  const redirectResponse = await chrome.identity.launchWebAuthFlow({
+  const redirectResponse = await api.identity.launchWebAuthFlow({
     url: authUrl.toString(),
     interactive: true,
   });
@@ -155,8 +160,8 @@ async function refreshAccessToken() {
 
 async function extractContent(tabId) {
   // Inject the vendored Readability first so its `Readability` global exists.
-  await chrome.scripting.executeScript({ target: { tabId }, files: ["readability.js"] });
-  const [{ result }] = await chrome.scripting.executeScript({
+  await api.scripting.executeScript({ target: { tabId }, files: ["readability.js"] });
+  const [{ result }] = await api.scripting.executeScript({
     target: { tabId },
     func: () => {
       try {
@@ -201,12 +206,12 @@ async function save() {
     return { ok: false, error: "Not connected. Set a dev token or click Connect." };
   }
 
-  let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  let [tab] = await api.tabs.query({ active: true, currentWindow: true });
   // In the real toolbar popup the active tab is the page being viewed. When the
   // popup is opened as its own page (e.g. the e2e harness) or the active tab is
   // a chrome:// surface, fall back to the most recently accessed http(s) tab.
   if (!tab || !tab.url || !/^https?:/.test(tab.url)) {
-    const tabs = await chrome.tabs.query({});
+    const tabs = await api.tabs.query({});
     tab = tabs
       .filter((t) => t.url && /^https?:/.test(t.url))
       .sort((a, b) => (b.lastAccessed || 0) - (a.lastAccessed || 0))[0];
@@ -242,7 +247,7 @@ async function save() {
 
   if (res.status === 401) {
     // Force a re-auth by clearing the stale OAuth token.
-    if (auth.mode === "oauth") await chrome.storage.local.remove("oauth");
+    if (auth.mode === "oauth") await api.storage.local.remove("oauth");
     return { ok: false, error: "Unauthorized (401). Reconnect and try again." };
   }
   if (res.status === 502) {
@@ -266,7 +271,7 @@ async function save() {
 // Message router (popup <-> worker)
 // ---------------------------------------------------------------------------
 
-chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
+api.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   (async () => {
     try {
       if (msg.type === "getAuthState") {

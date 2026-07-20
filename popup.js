@@ -1,6 +1,11 @@
 // ABOUTME: Popup controller — drives the 3 states and relays Save/Connect
 // ABOUTME: intents to the service worker, surfacing every failure visibly.
 
+// Firefox exposes promise-based APIs on `browser` and callback-based ones
+// on `chrome`; Chrome MV3 has only `chrome`, which is promise-based. Every
+// call below is awaited, so the promise-bearing namespace has to win.
+const api = globalThis.browser ?? globalThis.chrome;
+
 const $ = (id) => document.getElementById(id);
 const els = {
   status: $("status"),
@@ -14,7 +19,7 @@ const els = {
 };
 
 function send(message) {
-  return chrome.runtime.sendMessage(message);
+  return api.runtime.sendMessage(message);
 }
 
 function reset() {
@@ -80,7 +85,7 @@ els.save.addEventListener("click", async () => {
 
 els.optionsLink.addEventListener("click", (e) => {
   e.preventDefault();
-  chrome.runtime.openOptionsPage();
+  api.runtime.openOptionsPage();
 });
 
 render();
