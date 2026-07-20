@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Mind Grapes",
-  "version": "0.1.0",
+  "version": "2026.7.1",
   "description": "Bookmark the current page into your Mind Grapes second brain.",
   "action": {
     "default_title": "Save to Mind Grapes",
@@ -15,6 +15,14 @@
     "page": "options.html",
     "open_in_tab": true
   },
-  "permissions": ["identity", "activeTab", "scripting", "storage"],
-  "host_permissions": ["http://localhost:8080/*", "https://*/*"]
+  "permissions": [
+    "identity",
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "http://localhost:8080/*",
+    "https://*/*"
+  ]
 }
