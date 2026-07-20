@@ -10,11 +10,14 @@
     "release": "npm version \"$(node scripts/next-version.mjs)\"",
     "version": "node scripts/sync-manifest-version.mjs && git add manifest.json",
     "test:package": "playwright test tests/e2e/package.spec.mjs",
+    "test:firefox": "playwright test tests/e2e/firefox.spec.mjs",
     "test:pkce": "node tests/pkce.test.mjs",
     "test:version": "node tests/next-version.test.mjs",
     "test:e2e": "playwright test"
   },
   "devDependencies": {
-    "@playwright/test": "^1.48.0"
+    "@playwright/test": "^1.48.0",
+    "playwright-webextext": "^0.0.5",
+    "tslib": "^2.8.1"
   }
 }
