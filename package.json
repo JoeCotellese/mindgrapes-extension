@@ -5,6 +5,7 @@
   "type": "module",
   "description": "Chrome MV3 extension that bookmarks pages into Mind Grapes.",
   "scripts": {
+    "icons": "node scripts/make-icons.mjs",
     "package": "scripts/package.sh",
     "release": "npm version \"$(node scripts/next-version.mjs)\"",
     "version": "node scripts/sync-manifest-version.mjs && git add manifest.json",
