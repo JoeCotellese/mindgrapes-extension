@@ -40,7 +40,37 @@ key it supports.
    automated Firefox check installs the bundle but cannot observe it running.
 
 A temporary add-on is removed when Firefox restarts. Installing permanently
-requires AMO signing.
+requires AMO signing — see below.
+
+## Install permanently (Firefox, signed `.xpi`)
+
+To stop re-loading source on every restart, sign the bundle as an **unlisted**
+add-on. Mozilla's automated review signs it (usually seconds) and returns a
+`.xpi` you install once; it survives restarts and never appears in the public
+AMO gallery.
+
+One-time setup: create API credentials at addons.mozilla.org → Developer Hub →
+**Manage API Keys**. Export them (don't commit them):
+
+```
+export AMO_JWT_ISSUER="user:12345:67"
+export AMO_JWT_SECRET="…"
+```
+
+Then, after bumping the version (`npm run release`):
+
+```
+npm run sign:firefox -- --api-key="$AMO_JWT_ISSUER" --api-secret="$AMO_JWT_SECRET"
+```
+
+The signed `.xpi` lands in `dist/`. Install it via
+`about:addons` → gear → **Install Add-on From File…**. Re-run after each version
+bump and Firefox updates the existing install in place.
+
+Note: AMO won't re-sign a version number it has already signed, so bump first.
+The `data_collection_permissions` manifest key (Firefox-only, ignored by Chrome)
+declares that Mind Grapes transmits page content; AMO rejects new submissions
+without it.
 
 ## Configure
 

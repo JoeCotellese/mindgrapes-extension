@@ -7,6 +7,7 @@
   "scripts": {
     "icons": "node scripts/make-icons.mjs",
     "package": "scripts/package.sh",
+    "sign:firefox": "web-ext sign --channel=unlisted --source-dir=. --artifacts-dir=dist --ignore-files 'node_modules/**' 'tests/**' 'test-results/**' 'scripts/**' 'dist/**' 'docs/**' 'playwright.config.mjs' 'package*.json' 'SPEC.md' 'README.md' 'CLAUDE.md'",
     "release": "npm version \"$(node scripts/next-version.mjs)\"",
     "version": "node scripts/sync-manifest-version.mjs && git add manifest.json",
     "test:package": "playwright test tests/e2e/package.spec.mjs",
@@ -18,6 +19,7 @@
   "devDependencies": {
     "@playwright/test": "^1.48.0",
     "playwright-webextext": "^0.0.5",
-    "tslib": "^2.8.1"
+    "tslib": "^2.8.1",
+    "web-ext": "^8.10.0"
   }
 }
